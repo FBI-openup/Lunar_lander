@@ -1,0 +1,34 @@
+lunar_lander_rl/
+│
+├── README.md                    # 项目说明文档
+├── requirements.txt             # 项目依赖
+│
+├── src/                        # 源代码目录
+│   ├── __init__.py
+│   ├── environment.py          # 环境封装
+│   ├── agents/                 # 智能体实现
+│   │   ├── __init__.py
+│   │   ├── base_agent.py      # 基础智能体类
+│   │   ├── random_agent.py    # 随机策略
+│   │   ├── td_agent.py        # TD算法
+│   │   ├── sarsa_agent.py     # SARSA算法
+│   │   ├── qlearning_agent.py # Q-learning算法
+│   │   └── dqn_agent.py       # DQN算法
+│   │
+│   ├── utils/                  # 工具函数
+│   │   ├── __init__.py
+│   │   ├── buffer.py          # 经验回放缓冲区
+│   │   ├── logger.py          # 日志和指标记录
+│   │   └── visualizer.py      # 可视化工具
+│   │
+│   └── config.py              # 配置文件
+│
+├── experiments/               # 实验脚本
+│   ├── train.py              # 训练脚本
+│   ├── evaluate.py           # 评估脚本
+│   └── compare_agents.py     # 算法对比脚本
+│
+└── results/                  # 实验结果
+    ├── models/               # 保存训练的模型
+    ├── logs/                 # 训练日志
+    └── plots/                # 结果图表
