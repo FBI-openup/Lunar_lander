@@ -1,0 +1,8 @@
+{
+    "agent_type": "random",
+    "mode": "train_and_evaluate",
+    "seed": 42,
+    "train_episodes": 1000,
+    "eval_episodes": 100,
+    "render": true
+}
