@@ -23,7 +23,7 @@ class LunarLanderEnvironment:
         Args:
             seed: 随机种子，确保实验可重复性
         """
-        self.env = gym.make('LunarLander-v3', render_mode=render_mode)
+        self.env = gym.make('LunarLander-v3', render_mode=render_mode, continuous=False)
         self.env.reset(seed=seed)
 
         # 环境信息

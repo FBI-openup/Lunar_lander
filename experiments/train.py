@@ -49,5 +49,12 @@ def train_agent(env, agent, config: Dict[str, Any]):
             print(f"Average Reward: {avg_reward:.2f}")
             print(f"Average Steps: {avg_steps:.2f}")
             print("-" * 50)
+        # 每个episode结束后衰减epsilon
+        if done:
+            agent.decay_epsilon()
+
+        # 每1000个episodes打印当前的epsilon值
+        if episode % 1000 == 0:
+            print(f"Current epsilon: {agent.epsilon:.3f}")
 
     return logger

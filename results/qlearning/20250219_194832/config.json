@@ -1,0 +1,8 @@
+{
+    "agent_type": "qlearning",
+    "mode": "train_and_evaluate",
+    "seed": 42,
+    "train_episodes": 20000,
+    "eval_episodes": 100,
+    "render": true
+}

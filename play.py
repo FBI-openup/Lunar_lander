@@ -8,11 +8,13 @@
 """
 # play.py
 import time
+
+from main import Config
 from src.environment import LunarLanderEnvironment
 from src.agents.random_agent import RandomAgent
 # from src.agents.td_agent import TDAgent
 # from src.agents.sarsa_agent import SARSAAgent
-# from src.agents.qlearning_agent import QLearningAgent
+from src.agents.qlearning_agent import QLearningAgent
 # from src.agents.dqn_agent import DQNAgent
 
 
@@ -22,7 +24,11 @@ def get_agent(agent_type: str, state_dim: int, action_dim: int):
         'random': lambda: RandomAgent(state_dim, action_dim),
         # 'td': lambda: TDAgent(state_dim, action_dim),
         # 'sarsa': lambda: SARSAAgent(state_dim, action_dim),
-        # 'qlearning': lambda: QLearningAgent(state_dim, action_dim),
+        'qlearning': lambda: QLearningAgent(state_dim, action_dim,
+                            # lr=Config.QLearning.LEARNING_RATE,
+                            learning_rate=Config.QLearning.LEARNING_RATE,
+                            gamma=Config.QLearning.GAMMA,
+                            epsilon=Config.QLearning.EPSILON),
         # 'dqn': lambda: DQNAgent(state_dim, action_dim)
     }
     return agents[agent_type]()
@@ -66,7 +72,7 @@ def play_episode(env, agent, render_delay: float = 0.05):
 
 def main():
     # 配置
-    AGENT_TYPE = 'random'  # 选择要运行的智能体类型
+    AGENT_TYPE = 'qlearning'  # 选择要运行的智能体类型
     NUM_EPISODES = 3  # 要运行的回合数
     RENDER_DELAY = 0.01  # 渲染延迟（秒）
 

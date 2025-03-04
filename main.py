@@ -14,23 +14,29 @@ from src.environment import LunarLanderEnvironment
 from src.agents.random_agent import RandomAgent
 # from src.agents.td_agent import TDAgent
 # from src.agents.sarsa_agent import SARSAAgent
-# from src.agents.qlearning_agent import QLearningAgent
+from src.agents.qlearning_agent import QLearningAgent
 # from src.agents.dqn_agent import DQNAgent
 from experiments.train import train_agent
 from experiments.evaluate import evaluate_agent
 from src.utils.visualizer import Visualizer
 
 
+# 更新 main.py 中的 Config 类
+# 添加新的参数，支持优先级经验回放和优先级扫描
+
+# 更新 main.py 中的 Config 类
+# 添加新的参数，支持优化状态表示和奖励函数
+
 class Config:
     """配置类，集中管理所有可调参数"""
     # 基础设置
-    AGENT_TYPE = 'random'  # 可选: 'random', 'td', 'sarsa', 'qlearning', 'dqn'
+    AGENT_TYPE = 'qlearning'  # 可选: 'random', 'qlearning', 'dqn'
     MODE = 'train_and_evaluate'  # 可选: 'train', 'evaluate', 'train_and_evaluate'
     SEED = 42
 
     # 训练参数
-    TRAIN_EPISODES = 1000
-    LOG_INTERVAL = 10
+    TRAIN_EPISODES = 10000  # 增加训练回合数
+    LOG_INTERVAL = 1000
 
     # 评估参数
     EVAL_EPISODES = 100
@@ -40,57 +46,39 @@ class Config:
     BASE_SAVE_DIR = 'results'
 
     # 算法特定参数
-    class TD:
-        LEARNING_RATE = 0.01
-        GAMMA = 0.99
-        EPSILON = 0.1
-
-    class SARSA:
-        LEARNING_RATE = 0.01
-        GAMMA = 0.99
-        EPSILON = 0.1
-
     class QLearning:
-        LEARNING_RATE = 0.01
-        GAMMA = 0.99
-        EPSILON = 0.1
+        LEARNING_RATE = 0.15
+        GAMMA = 0.995  # 增加折扣因子，更重视长期回报
+        EPSILON = 1.0  # 起始探索率
+        MIN_EPSILON = 0.02
+        REPLAY_BUFFER_SIZE = 50000
+        BATCH_SIZE = 64  # 增加批量大小
+        LEARNING_STARTS = 1000
+        TARGET_UPDATE_FREQ = 500
+        PRIORITIZED_REPLAY_ALPHA = 0.6
+        PRIORITIZED_REPLAY_BETA = 0.4
 
-    class DQN:
-        LEARNING_RATE = 0.001
-        GAMMA = 0.99
-        EPSILON_START = 1.0
-        EPSILON_END = 0.01
-        EPSILON_DECAY = 0.995
-        BATCH_SIZE = 64
-        MEMORY_SIZE = 10000
-        TARGET_UPDATE = 10
 
+# 更新 main.py 中的 get_agent 函数
 
 def get_agent(agent_type: str, state_dim: int, action_dim: int):
     """根据类型创建智能体"""
     agents = {
         'random': lambda: RandomAgent(state_dim, action_dim),
-        # 'td': lambda: TDAgent(state_dim, action_dim,
-        #                       lr=Config.TD.LEARNING_RATE,
-        #                       gamma=Config.TD.GAMMA,
-        #                       epsilon=Config.TD.EPSILON),
-        # 'sarsa': lambda: SARSAAgent(state_dim, action_dim,
-        #                             lr=Config.SARSA.LEARNING_RATE,
-        #                             gamma=Config.SARSA.GAMMA,
-        #                             epsilon=Config.SARSA.EPSILON),
-        # 'qlearning': lambda: QLearningAgent(state_dim, action_dim,
-        #                                     lr=Config.QLearning.LEARNING_RATE,
-        #                                     gamma=Config.QLearning.GAMMA,
-        #                                     epsilon=Config.QLearning.EPSILON),
-        # 'dqn': lambda: DQNAgent(state_dim, action_dim,
-        #                         lr=Config.DQN.LEARNING_RATE,
-        #                         gamma=Config.DQN.GAMMA,
-        #                         epsilon_start=Config.DQN.EPSILON_START,
-        #                         epsilon_end=Config.DQN.EPSILON_END,
-        #                         epsilon_decay=Config.DQN.EPSILON_DECAY,
-        #                         batch_size=Config.DQN.BATCH_SIZE,
-        #                         memory_size=Config.DQN.MEMORY_SIZE,
-        #                         target_update=Config.DQN.TARGET_UPDATE)
+        'qlearning': lambda: QLearningAgent(
+            state_dim,
+            action_dim,
+            learning_rate=Config.QLearning.LEARNING_RATE,
+            gamma=Config.QLearning.GAMMA,
+            epsilon=Config.QLearning.EPSILON,
+            min_epsilon=Config.QLearning.MIN_EPSILON,
+            replay_buffer_size=Config.QLearning.REPLAY_BUFFER_SIZE,
+            batch_size=Config.QLearning.BATCH_SIZE,
+            learning_starts=Config.QLearning.LEARNING_STARTS,
+            target_update_freq=Config.QLearning.TARGET_UPDATE_FREQ,
+            prioritized_replay_alpha=Config.QLearning.PRIORITIZED_REPLAY_ALPHA,
+            prioritized_replay_beta=Config.QLearning.PRIORITIZED_REPLAY_BETA
+        ),
     }
 
     if agent_type not in agents:
@@ -173,8 +161,8 @@ def main():
         run_experiment(env, agent, config)
     except KeyboardInterrupt:
         print("\n实验被用户中断")
-    except Exception as e:
-        print(f"\n实验出错: {str(e)}")
+    # except Exception as e:
+    #     print(f"\n实验出错: {str(e)}")
     finally:
         env.close()
 

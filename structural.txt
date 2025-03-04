@@ -2,6 +2,8 @@ lunar_lander_rl/
 │
 ├── README.md                    # 项目说明文档
 ├── requirements.txt             # 项目依赖
+├── main.py                     # 项目入口
+├── play.py                     # 演示脚本
 │
 ├── src/                        # 源代码目录
 │   ├── __init__.py
@@ -10,8 +12,6 @@ lunar_lander_rl/
 │   │   ├── __init__.py
 │   │   ├── base_agent.py      # 基础智能体类
 │   │   ├── random_agent.py    # 随机策略
-│   │   ├── td_agent.py        # TD算法
-│   │   ├── sarsa_agent.py     # SARSA算法
 │   │   ├── qlearning_agent.py # Q-learning算法
 │   │   └── dqn_agent.py       # DQN算法
 │   │
